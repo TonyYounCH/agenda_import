@@ -81,7 +81,8 @@ class db_table:
         query                = "SELECT %s FROM %s" % (columns_query_string, self.name)
         # build where query string
         if where:
-            where_query_string = [ "%s = '%s'" % (k,v) for k,v in where.items() ]
+            # Fixed to avoid SQL injection attacks
+            where_query_string = [ "%s = '%s'" % (k,v.replace("'", "''")) if type(v) == str else  "%s = '%s'" % (k,v) for k,v in where.items() ]
             query             += " WHERE " + ' AND '.join(where_query_string)
         
         result = []
@@ -112,7 +113,8 @@ class db_table:
     def insert(self, item):
         # build columns & values queries
         columns_query = ", ".join(item.keys())
-        values_query  = ", ".join([ "'%s'" % v for v in item.values()])
+        # Fixed to avoid SQL injection attacks
+        values_query  = ", ".join([ "'%s'" % v.replace("'", "''") if type(v) == str else "'%s'" % v for v in item.values()])
         #print(len(item.values()))
         #print(item["Speakers"])
         # INSERT INTO users(id, name) values (42, John)
