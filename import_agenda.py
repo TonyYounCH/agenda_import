@@ -24,6 +24,7 @@ class import_agenda:
 								})
 
 	def insert_data(self):
+		# Index for current excel file must start with 14
 		for i in range(14, self.length):
 			session_id = i
 			sessiont_date = self.data["sessiont_date"][i]
@@ -33,6 +34,8 @@ class import_agenda:
 			session_title = self.data["session_title"][i]
 			session_location = self.data["session_location"][i]
 			session_description = self.data["session_description"][i]
+			# session speakers are separated with " ; " instead of "; " in order to
+			# be selected by query with %LIKE%.
 			session_speakers = self.data["session_speakers"][i].replace("; ", " ; ")
 			subsessions = ""
 
@@ -42,6 +45,7 @@ class import_agenda:
 			if session_type == "Session" and i + 1 < self.length :
 				subsessions = self.find_subsessions(self.data["session_type"], i+1)
 
+			# insert into sessions table
 			self.sessions.insert({ 
 				"session_id": session_id, 
 				"sessiont_date": sessiont_date, 
