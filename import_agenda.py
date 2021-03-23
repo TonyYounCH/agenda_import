@@ -1,4 +1,4 @@
-# pip3 install pandas xlrd 
+#!/usr/bin/env python3
 import sys
 import pandas as pd
 from db_table import db_table
