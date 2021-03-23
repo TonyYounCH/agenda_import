@@ -25,25 +25,27 @@ class lookup_agenda:
 	def lookup(self, attribute, value):
 		targets = self.sessions.select([], { attribute: value })
 		result = ""
+		existing = [target["session_id"] for target in targets]
 		for target in targets:
 			if target["subsessions"] == '':
 				result += self.data_to_output(target)
 			else:
 				subsessions = target["subsessions"].split(" ; ")
-				result += self.data_to_output(target) + self.find_subsessions(subsessions)
+				result += self.data_to_output(target) + self.find_subsessions(existing, subsessions)
 		if result == "" :
-			result = "There is no matching session with your request.\n"
+			result = "There is no matching session with your request of "+attribute+"="+value+"\n"
 		return result
 
 		
 	# This is a helper function for lookup. It will generate output string of subsessions that 
 	# has the same session_id of subsessions elements.
-	def find_subsessions(self, subsessions):
+	def find_subsessions(self, existing, subsessions):
 		result = ""
 		for subsession in subsessions:
-			data = self.sessions.select([], {"session_id": subsession})[0]
-			data["session_type"] = data["session_type"]
-			result += self.data_to_output(data)
+			if int(subsession) not in existing:
+				data = self.sessions.select([], {"session_id": subsession})[0]
+				data["session_type"] = data["session_type"]
+				result += self.data_to_output(data)
 		return result
 
 	def data_to_output(self, data):
