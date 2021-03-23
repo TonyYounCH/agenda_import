@@ -36,7 +36,8 @@ class import_agenda:
 			description = self.data["description"][i]
 			# session speakers are separated with " ; " instead of "; " in order to
 			# be selected by query with %LIKE%.
-			speaker = self.data["speaker"][i].replace("; ", " ; ")
+			speakers = self.data["speaker"][i].split("; ")
+			speaker = "" if speakers[0] == "" else ";" + ";;".join(speakers) + ";"
 			subsessions = ""
 
 			# subsessions attribute is "" when there exists no subsessions.

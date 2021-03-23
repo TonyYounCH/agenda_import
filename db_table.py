@@ -82,9 +82,20 @@ class db_table:
         # build where query string
         if where:
             # Fixed to avoid SQL injection attacks
-            where_query_string = [ "%s = '%s'" % (k,v.replace("'", "''")) if type(v) == str else  "%s = '%s'" % (k,v) for k,v in where.items() ]
+            where_query_string = []
+            for k,v in where.items() :
+                if k == "session_id":
+                    where_query_string.append("%s = '%s'" % (k,v))
+                elif k == "speaker":
+                    v = v.replace("'", "''")
+                    if v == "":
+                        s = "%s = '%s'" % (k,v)
+                    else:
+                        s = k + " LIKE '%;" + v + ";%'"
+                    where_query_string.append(s)
+                else:
+                    where_query_string.append("%s = '%s'" % (k,v.replace("'", "''")))
             query             += " WHERE " + ' AND '.join(where_query_string)
-        
         result = []
         # SELECT id, name FROM users [ WHERE id=42 AND name=John ]
         #
