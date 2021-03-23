@@ -21,6 +21,7 @@ Assuming you have Python setup, to run locally, do the following commands.
    ```
 2. Install the project dependencies
     ```sh
+    cd agenda_import
     pip3 install pandas xlrd    // Install pandas and xlrd to execute import_agenda.py
     ```
 
